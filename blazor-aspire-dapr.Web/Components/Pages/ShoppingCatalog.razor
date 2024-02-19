@@ -1,0 +1,49 @@
+﻿@page "/shoppingcatalog"
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+
+@inject ShoppingCatalogApiClient CatalogApi
+
+<PageTitle>Shopping Catalog</PageTitle>
+
+<h1>Grocery Items</h1>
+
+<p>List of Grocery Items to be added to the basket.</p>
+
+@if (catalogItems == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Available Quantity</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var catalogItem in catalogItems)
+            {
+                <tr>
+                    <td>@catalogItem.Name</td>
+                    <td>@catalogItem.Price</td>
+                    <td>@catalogItem.AvailableQuantity</td>
+                    <td>Will Render Image</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private CatalogItem[]? catalogItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        catalogItems = await CatalogApi.GetCatalogAsync();
+    }
+}
